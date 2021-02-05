@@ -54,7 +54,10 @@ def generate_plot(title, xlabel, ylabel, data, name):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     
-    plt.plot(data, 'g', label = "20% Test Split")
+    plt.plot(data[0], 'r', label = "1 Tree")
+    plt.plot(data[1], 'g', label = "10 Trees")
+    plt.plot(data[2], 'b', label = "100 Trees")
+    
     plt.legend()
     
     filename = name + ".png"
@@ -67,22 +70,29 @@ def main():
     X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds = seeds_data_setup()
 
     criterion = 'gini'
-    n_estimators = 10
+    n_estimators = [1, 10, 100]
 
-    heart_trees = []
-    seeds_trees = []
+    heart_forests_n = []
+    seeds_forests_n = []
+
     heart_max = 13
     seeds_max = 7
 
-    for max_features in range(1, heart_max):
-        heart_trees.append(random_forest(X_train_heart, X_test_heart, y_train_heart, y_test_heart, criterion, n_estimators, max_features))
+    for n in n_estimators:
+        heart_forests = []
+        seeds_forests = []
 
-    for max_features in range(1, seeds_max):
-        seeds_trees.append(random_forest(X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds, criterion, n_estimators, max_features))
+        for max_features in range(1, heart_max):
+            heart_forests.append(random_forest(X_train_heart, X_test_heart, y_train_heart, y_test_heart, criterion, n, max_features))
+        
+        for max_features in range(1, seeds_max):
+            seeds_forests.append(random_forest(X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds, criterion, n, max_features))
 
+        heart_forests_n.append(heart_forests)
+        seeds_forests_n.append(seeds_forests)
 
-    generate_plot("Heart Disease Data (Random Forests / Gini)", "Number of Features", "Accuracy", heart_trees, "HeartRFGini")
-    generate_plot("Wheat Seeds Data (Random Forests / Gini)", "Number of Features", "Accuracy", seeds_trees, "SeedsRFGini")
+    generate_plot("Heart Disease Data (Random Forests / Gini)", "Number of Features", "Accuracy", heart_forests_n, "HeartRFGini")
+    generate_plot("Wheat Seeds Data (Random Forests / Gini)", "Number of Features", "Accuracy", seeds_forests_n, "SeedsRFGini")
 
 
 main()
