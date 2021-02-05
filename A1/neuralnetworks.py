@@ -53,7 +53,10 @@ def generate_plot(title, xlabel, ylabel, data, name):
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     
-    plt.plot(data, 'b', label = "0.1 Learning Rate")
+    plt.plot(data[0], 'r', label = "0.01 Learning Rate")
+    plt.plot(data[1], 'g', label = "0.1 Learning Rate")
+    plt.plot(data[2], 'b', label = "0.25 Learning Rate")
+
     plt.legend()
     
     filename = name + ".png"
@@ -67,7 +70,7 @@ def main():
 
     hidden_layer_sizes = [5, 10, 50]
     max_iter = [1, 10, 20]
-    learning_rate_init = 0.1
+    learning_rates = [0.01, 0.1, 0.25]
 
     heart_networks_5 = []
     seeds_networks_5 = []
@@ -76,24 +79,26 @@ def main():
     heart_networks_50 = []
     seeds_networks_50 = []
 
-    for layer in hidden_layer_sizes:
-        heart_networks = []
-        seeds_networks = []
+    for rate in learning_rates:
 
-        for num_iter in max_iter:
-            for iteration in range(1, num_iter):
-                heart_networks.append(neural_networks(X_train_heart, X_test_heart, y_train_heart, y_test_heart, layer, iteration, learning_rate_init))
-                seeds_networks.append(neural_networks(X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds, layer, iteration, learning_rate_init))
+        for layer in hidden_layer_sizes:
+            heart_networks = []
+            seeds_networks = []
 
-        if layer == 5:
-            heart_networks_5 = heart_networks
-            seeds_networks_5 = seeds_networks
-        elif layer == 10:
-            heart_networks_10 = heart_networks
-            seeds_networks_10 = seeds_networks
-        elif layer == 50:
-            heart_networks_50 = heart_networks
-            seeds_networks_50 = seeds_networks
+            for num_iter in max_iter:
+                for iteration in range(1, num_iter):
+                    heart_networks.append(neural_networks(X_train_heart, X_test_heart, y_train_heart, y_test_heart, layer, iteration, rate))
+                    seeds_networks.append(neural_networks(X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds, layer, iteration, rate))
+
+            if layer == 5:
+                heart_networks_5.append(heart_networks)
+                seeds_networks_5.append(seeds_networks)
+            elif layer == 10:
+                heart_networks_10.append(heart_networks)
+                seeds_networks_10.append(seeds_networks)
+            elif layer == 50:
+                heart_networks_50.append(heart_networks)
+                seeds_networks_50.append(seeds_networks)
     
     generate_plot("Heart Disease Data (Neural Networks / 5 Hidden Layers)", "Number of Iterations", "Accuracy", heart_networks_5, "HeartNN5")
     generate_plot("Wheat Seeds Data (Neural Networks / 5 Hidden Layers)", "Number of Iterations", "Accuracy", seeds_networks_5, "SeedsNN5")
