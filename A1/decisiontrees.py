@@ -60,7 +60,7 @@ def decision_tree(X_train, X_test, y_train, y_test, criterion, max_features):
             trees.append(clf)
             nodes.append(clf.tree_.node_count)
 
-    return max(test_scores)
+    return max(training_scores)
     
 
 # Use matplotlib to create graphs for results.
@@ -81,7 +81,7 @@ def main():
     X_train_heart, X_test_heart, y_train_heart, y_test_heart = heart_data_setup()
     X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds = seeds_data_setup()
 
-    criterion = 'gini'
+    criterion = 'entropy'
     heart_trees = []
     seeds_trees = []
     heart_max = 13
@@ -94,7 +94,7 @@ def main():
         seeds_trees.append(decision_tree(X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds, criterion, max_features))
 
     generate_plot("Heart Disease Data (Decision Trees / Gini)", "Number of Features", "Accuracy", heart_trees, "HeartDTGini")
-    generate_plot("Wheet Seeds Data (Decision Trees / Gini)", "Number of Features", "Accuracy", seeds_trees, "SeedsDTGini")
+    generate_plot("Wheet Seeds Data (Decision Trees / Gini)", "Number of Features", "Accuracy", seeds_trees, "SeedsDTEntropy_Train")
 
 
 main()

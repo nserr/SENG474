@@ -45,7 +45,7 @@ def random_forest(X_train, X_test, y_train, y_test, criterion, n_estimators, max
     y_train_prediction = clf.predict(X_train)
     y_test_prediction = clf.predict(X_test)
 
-    return metrics.accuracy_score(y_test, y_test_prediction)
+    return metrics.accuracy_score(y_train, y_train_prediction)
 
 
 # Use matplotlib to create graphs for results.
@@ -69,7 +69,7 @@ def main():
     X_train_heart, X_test_heart, y_train_heart, y_test_heart = heart_data_setup()
     X_train_seeds, X_test_seeds, y_train_seeds, y_test_seeds = seeds_data_setup()
 
-    criterion = 'gini'
+    criterion = 'entropy'
     n_estimators = [1, 10, 100]
 
     heart_forests_n = []
@@ -92,7 +92,7 @@ def main():
         seeds_forests_n.append(seeds_forests)
 
     generate_plot("Heart Disease Data (Random Forests / Gini)", "Number of Features", "Accuracy", heart_forests_n, "HeartRFGini")
-    generate_plot("Wheat Seeds Data (Random Forests / Gini)", "Number of Features", "Accuracy", seeds_forests_n, "SeedsRFGini")
+    generate_plot("Wheat Seeds Data (Random Forests / Gini)", "Number of Features", "Accuracy", seeds_forests_n, "SeedsRFEntropy_Train")
 
 
 main()
