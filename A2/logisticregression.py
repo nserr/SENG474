@@ -27,7 +27,7 @@ def init():
     train_len = len(X_train)
     test_len = len(X_test)
 
-    # Set training data as binary classification problem.
+    # Convert training data to binary classification problem.
     for i in range(train_len):
 
         if y_train[i] == 5:
@@ -38,7 +38,7 @@ def init():
             y_train_temp.append(1)
             X_train_temp.append(X_train[i])
 
-    # Set test data as binary classification problem.
+    # Convert test data to binary classification problem.
     for i in range(test_len):
 
         if y_test[i] == 5:
