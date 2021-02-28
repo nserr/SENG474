@@ -27,17 +27,14 @@ def init():
     train_len = len(X_train)
     test_len = len(X_test)
 
-    sandal_count = 0
-    sneaker_count = 0
-
     # Convert training data to binary classification problem.
     for i in range(train_len):
 
-        if y_train[i] == 5 and sandal_count < 1000:
+        if y_train[i] == 5:
             y_train_temp.append(0)
             X_train_temp.append(X_train[i])
 
-        if y_train[i] == 7 and sneaker_count < 1000:
+        if y_train[i] == 7:
             y_train_temp.append(1)
             X_train_temp.append(X_train[i])
 
