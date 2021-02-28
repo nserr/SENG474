@@ -280,8 +280,8 @@ def generate_gaussian_plot(training_accuracies, test_accuracies, gamma_values):
 
 
 def main():
-    # svm_standard('linear', 'scale')
-    # svm_kfold('linear', 'scale')
+    svm_standard('linear', 'scale')
+    svm_kfold('linear', 'scale')
     svm_gaussian()
 
 
