@@ -11,18 +11,43 @@ import random as rand
 from mpl_toolkits.mplot3d import Axes3D
 
 
-def uniform_random_init(centroids, k, m, x):
+# Implementation of Uniform Random Initialization.
+def uniform_random_init(centroids, k, x):
     for n in range(k):
-        r = rand.randint(0, m - 1)
+        r = rand.randint(0, x.shape[0] - 1)
         centroids = np.c_[centroids, x[r]]
 
     return centroids
 
 
-def kmeans_pp_init():
-    return
+# Implementation of K-Means++ Initialization.
+def kmeans_pp_init(x, k):
+    r = rand.randint(0, x.shape[0])
+    centroid = np.array([x[r]])
+
+    for n in range(1, k):
+        r = 0
+        r2 = rand.random()
+        arr = np.array([])
+
+        for cur_x in x:
+            result = np.min(np.sum((cur_x - centroid)**2))
+            arr = np.append(arr, result)
+
+        prob = arr / np.sum(arr)
+        cum_prob = np.cumsum(prob)
+
+        for i, j in enumerate(cum_prob):
+            if r2 < j:
+                r = i
+                break
+        
+        centroid = np.append(centroid, [x[r]], axis = 0)
+
+    return centroid.T
 
 
+# Implementation of K-Means Algorithm to deal with 2D data (Dataset 1).
 def kmeans_2d(init_method):
     df = pd.read_csv('data/dataset1.csv')
 
@@ -39,10 +64,10 @@ def kmeans_2d(init_method):
         centroids = np.array([]).reshape(x.shape[1], 0)
 
         if (init_method == 'URI'):
-            centroids = uniform_random_init(centroids, k, m, x)
+            centroids = uniform_random_init(centroids, k, x)
             method = "Uniform Random Initialization"
         elif (init_method == 'K++'):
-            # centroids = kmeans_pp_init()
+            centroids = kmeans_pp_init(x, k)
             method = "K-Means++ Initialization"
 
         for i in range(iters):
@@ -86,11 +111,13 @@ def kmeans_2d(init_method):
     return
 
 
+# Implementation of K-Means Algorithm to deal with 3D data (Dataset 2).
 def kmeans_3d():
     return
 
 
 def main():
-    kmeans_2d('URI')
+    kmeans_2d('K++') # Takes initialization method as argument. 'URI' or 'K++'.
+
 
 main()
