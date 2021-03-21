@@ -54,7 +54,7 @@ def kmeans_2d(init_method):
     x = df.iloc[:, [0, 1]].values
     m = x.shape[0]
 
-    arr = np.array([])
+    sum_se_arr = np.array([])
 
     iters = 10
     method = ''
@@ -97,7 +97,7 @@ def kmeans_2d(init_method):
             se = (output[n + 1] - centroids[n, :])**2
             sum_se += np.sum(se)
         
-        arr = np.append(arr, sum_se)
+        sum_se_arr = np.append(sum_se_arr, sum_se)
         
         for n in range(k):
             plt.scatter(output[n + 1][:, 0], output[n + 1][:, 1])
@@ -108,16 +108,78 @@ def kmeans_2d(init_method):
         plt.savefig(filename)
         plt.clf()
 
-    return
-
 
 # Implementation of K-Means Algorithm to deal with 3D data (Dataset 2).
-def kmeans_3d():
-    return
+def kmeans_3d(init_method):
+    df = pd.read_csv('data/dataset2.csv')
+
+    x = df.iloc[:, [0, 1, 2]].values
+    m = x.shape[0]
+
+    sum_se_arr = np.array([])
+    
+    iters = 10
+    method = ''
+
+    for k in range(2, 11, 2):
+        output = {}
+        centroids = np.array([]).reshape(x.shape[1], 0)
+
+        if (init_method == 'URI'):
+            centroids = uniform_random_init(centroids, k, x)
+            method = "Uniform Random Initialization"
+        elif (init_method == 'K++'):
+            centroids = kmeans_pp_init(x, k)
+            method = "K-Means++ Initialization"
+        
+        for i in range(iters):
+            dists = np.array([]).reshape(m, 0)
+
+            for n in range(k):
+                result = (x - centroids[:, n])**2
+                dist = np.sum(result, axis = 1)
+                dists = np.c_[dists, dist]
+
+            cluster = np.argmin(dists, axis = 1) + 1
+
+            for n in range(k):
+                output[n + 1] = np.array([]).reshape(3, 0)
+
+            for n in range(m):
+                output[cluster[n]] = np.c_[output[cluster[n]], x[n]]
+
+            for n in range(k):
+                output[n + 1] = output[n + 1].T
+                centroids[:, n] = np.mean(output[n + 1], axis = 0)
+            
+        centroids = centroids.T
+        sum_se = 0
+
+        for n in range(k):
+            se = (output[n + 1] - centroids[n, :])**2
+            sum_se += np.sum(se)
+
+        sum_se_arr = np.append(sum_se_arr, sum_se)
+
+        fig = plt.figure()
+        ax = Axes3D(fig)
+
+        for n in range(k):
+            ax.scatter(output[n + 1][:, 0], output[n + 1][:, 1], output[n + 1][:, 2])
+        
+        ax.set_title("K-Means (3D, " + method + ") with " + str(k) + " Clusters")
+        ax.scatter(centroids[:, 0], centroids[:, 1], centroids[:, 2], s = 300, c = 'blue', label = 'Centroids')
+        filename = "kmeans3d_" + init_method + "_" + str(k)
+        plt.savefig(filename)
+        plt.clf()
 
 
 def main():
-    kmeans_2d('K++') # Takes initialization method as argument. 'URI' or 'K++'.
+    ### K-Means ###
+    # Takes initialization method as argument. 'URI' or 'K++'.
+
+    # kmeans_2d('K++')
+    kmeans_3d('K++') 
 
 
 main()
