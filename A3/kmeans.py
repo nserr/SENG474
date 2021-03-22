@@ -1,7 +1,7 @@
 #####
 ## Noah Serr V00891494
 ## SENG 474 A3
-## Lloyd's Algorithm (k-means)
+## Lloyd's Algorithm (K-Means)
 #####
 
 import numpy as np
@@ -108,6 +108,9 @@ def kmeans_2d(init_method):
         plt.savefig(filename)
         plt.clf()
 
+    plot_cost(sum_se_arr, '2D', init_method)
+
+
 
 # Implementation of K-Means Algorithm to deal with 3D data (Dataset 2).
 def kmeans_3d(init_method):
@@ -173,12 +176,27 @@ def kmeans_3d(init_method):
         plt.savefig(filename)
         plt.clf()
 
+    plot_cost(sum_se_arr, '3D', init_method)
+
+
+# Function to create graphs of cost as k increases.
+def plot_cost(sum_se_arr, dataset, method):
+    clusters = [2, 4, 6, 8, 10]
+
+    plt.title("Cost for " + dataset + " Dataset Using " + method)
+    plt.plot(clusters, sum_se_arr, color = 'blue')
+    plt.xlabel("Number of Clusters")
+    plt.ylabel("Sum of Squared Errors")
+
+    filename = "cost_" + dataset + "_" + method
+    plt.savefig(filename)
+    plt.clf()
+
 
 def main():
     ### K-Means ###
     # Takes initialization method as argument. 'URI' or 'K++'.
-
-    # kmeans_2d('K++')
+    kmeans_2d('URI')
     kmeans_3d('K++') 
 
 
