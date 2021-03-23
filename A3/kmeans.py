@@ -194,9 +194,10 @@ def plot_cost(sum_se_arr, dataset, method):
 
 
 def main():
-    ### K-Means ###
-    # Takes initialization method as argument. 'URI' or 'K++'.
     kmeans_2d('URI')
+    kmeans_2d('K++')
+
+    kmeans_3d('URI')
     kmeans_3d('K++') 
 
 
